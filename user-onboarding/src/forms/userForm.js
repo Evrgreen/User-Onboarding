@@ -3,15 +3,17 @@ import {withFormik,Form,Field,} from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 
+import Terms from "../Terms"
 
 
- const UserForm=({values,status,errors,touched})=>{
-     const [users,setUsers] = useState([]);
-     console.log(values)
-     useEffect(()=>{
-         console.log("status has changed!", status);
-         status && setUsers(users => [...users,status])
-     },[status]);
+
+const UserForm=({values,status,errors,touched})=>{
+    const [users,setUsers] = useState([]);
+    console.log(values)
+    useEffect(()=>{
+        console.log("status has changed!", status);
+        status && setUsers(users => [...users,status])
+    },[status]);
     return(
         <div className="container">
         <Form className="form__container">
@@ -20,7 +22,7 @@ import axios from "axios";
 
             {touched.name && errors.name && (
             <p className="errors">{errors.name}</p>
-          )}
+            )}
             <label htmlFor="email">E-mail</label>
             <Field id="email" name="email"/>
 
@@ -33,12 +35,14 @@ import axios from "axios";
             {touched.password && errors.password && (
                 <p className="errors">{errors.password}</p>
             )}
-            <label htmlFor="terms" className="checkbox">
+            <Terms/>
+            <label htmlFor="terms" className="checkbox">Accept  
                 <Field type="checkbox" id="terms" value="terms" checked={values.terms}/>
                 <span className="checkmark"></span>
             </label>
             <button type="submit">Add User</button>
         </Form>
+        <div className="users">
         {users.map(user =>{
             return (
                 <div className="userCard">
@@ -47,6 +51,7 @@ import axios from "axios";
                 </div>
             )
         })}
+        </div>
         </div>
     )
     
@@ -68,8 +73,8 @@ const FormikUserForm = withFormik({
         password: Yup.string()
         .required("Please Enter Your Password")
         .min(8,"Your Password must be at least 8 characters")
-        .matches(/[a-zA-Z]/,"Your Password Can Only Contain Letters")
-        terms: Yup.boolean().required();
+        .matches(/[a-zA-Z]/,"Your Password Can Only Contain Letters"),
+        terms: Yup.boolean().required()
     }),
     handleSubmit(values,{setStatus,resetForm}) {
         console.log("submitting",values);
